@@ -14,19 +14,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="96dp"
         android:id="@+id/txt_username"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:hint="Name" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:text="Passwort"
         android:ems="10"
         android:layout_below="@+id/txt_username"
         android:layout_alignLeft="@+id/txt_username"
@@ -34,7 +33,8 @@
         android:layout_marginTop="15dp"
         android:id="@+id/txt_password"
         android:elevation="1dp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:hint="Password" />
 
     <Button
         android:text="Login"
