@@ -36,7 +36,6 @@
         android:textAlignment="center"
         android:hint="Password" />
 
-
     <Button
         android:text="Login"
         android:layout_width="wrap_content"
