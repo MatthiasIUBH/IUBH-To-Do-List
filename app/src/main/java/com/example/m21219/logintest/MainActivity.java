@@ -11,8 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static android.R.attr.name;
+
 public class MainActivity extends AppCompatActivity {
 
+    public static final String KEY = "HEY" ;
     SQLiteDatabase myDB=null;
 
     @Override
@@ -25,8 +28,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             myDB = this.openOrCreateDatabase("Users", MODE_PRIVATE, null);
             myDB.execSQL("CREATE TABLE IF NOT EXISTS Users (name VARCHAR, password VARCHAR)");
-            myDB.execSQL("INSERT INTO Users (name, password) VALUES ('matthias', 'test1')");
-            myDB.execSQL("INSERT INTO Users (name, password) VALUES ('hakan', 'test2')");
+            myDB.execSQL("INSERT INTO Users (name, password) VALUES ('Matthias', 'test1')");
+            myDB.execSQL("INSERT INTO Users (name, password) VALUES ('Hakan', 'test2')");
+            myDB.execSQL("INSERT INTO Users (name, password) VALUES ('Lukas', 'test3')");
         }
         catch(Exception e) {
             Log.e("Error", "Error", e);
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         Toast.makeText(getApplicationContext(), "Congrats: Login Successfull", Toast.LENGTH_LONG).show();
                         Intent myIntent = new Intent(MainActivity.this, MainView.class);
+                        myIntent.putExtra(KEY, editTextUserName.getText().toString());
                         //myIntent.putExtra("key", value); //Optional parameters
                         MainActivity.this.startActivity(myIntent);
                     }
