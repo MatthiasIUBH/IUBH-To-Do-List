@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -34,11 +33,11 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
             view = LayoutInflater.from(getContext()).inflate(R.layout.todo_overwiev_list_item, parent, false);
         }
 
-        ((TextView) view.findViewById(R.id.name)).setText(currentToDo.getName());
+        ((TextView) view.findViewById(R.id.view_name)).setText(currentToDo.getName());
 
-        TextView completiondate = (TextView) view.findViewById(R.id.completiondate);
+        TextView completiondate = (TextView) view.findViewById(R.id.view_completiondate);
         ImageView favorite = (ImageView) view.findViewById(R.id.favorite_icon);
-        ImageView completionstatus = (ImageView) view.findViewById(R.id.completionstatus);
+        ImageView completionstatus = (ImageView) view.findViewById(R.id.view_completionstatus);
 
         if(currentToDo.getCompletiondate()== null){
             completiondate.setVisibility(View.GONE);

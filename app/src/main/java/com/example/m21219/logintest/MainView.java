@@ -104,7 +104,15 @@ public class MainView extends AppCompatActivity {
             }
         }
     } */
-}}
+}
+
+    public void createTodo (View view) {
+        Intent createTodo = new Intent(this, TodoCreate.class);
+        startActivity(createTodo);
+    }
+
+
+}
 
 
 
