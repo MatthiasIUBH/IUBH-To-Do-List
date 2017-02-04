@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class TodoCreate extends AppCompatActivity {
 
@@ -16,32 +18,34 @@ public class TodoCreate extends AppCompatActivity {
 
     public void onClickSubmit (View Submit) {
 
-        /*neue ToDo Instanz generieren
+        //neue ToDo Instanz generieren
         ToDo newToDo = new ToDo();
-        */
 
-        /*Textfelder auslesen und als String übergeben
+
+        //Textfelder auslesen und als String übergeben
         EditText name = (EditText) findViewById(R.id.name);
         String sName = name.getText().toString();
         newToDo.setName(sName);
 
-        */
-
-        /*EditText description = (EditText) findViewById(R.id.view_description);
-        newToDo.setDescription(description.getText().toString());
-        */
-
+        EditText description = (EditText) findViewById(R.id.description);
+        String sDescription = description.getText().toString();
+        newToDo.setDescription(sDescription);
 
         //...
 
 
 
-        /*Instanz in Datenbank schreiben
+        //Instanz in Datenbank schreiben
         TodoDatabase.getInstance(this).createToDo(newToDo);
-        */
+
+
+
+        //UserID auslesen
+        String UserID = getIntent().getExtras().getString("UserID");
 
         //zurück zur Main Activity
         Intent MainView = new Intent(this, MainView.class);
+        MainView.putExtra("UserID", UserID);
         startActivity(MainView);
 
     }

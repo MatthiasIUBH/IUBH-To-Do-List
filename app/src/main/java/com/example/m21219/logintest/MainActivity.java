@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Login Erfolgreich!", Toast.LENGTH_LONG).show();
 
                         Intent myIntent = new Intent(MainActivity.this, MainView.class);
-                        myIntent.putExtra(UserID, intUserID);
+                        myIntent.putExtra("UserID", intUserID);
                         MainActivity.this.startActivity(myIntent);
                     }
                     else

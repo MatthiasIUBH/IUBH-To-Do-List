@@ -28,6 +28,7 @@ public class MainView extends AppCompatActivity {
     private List<ToDo> dataSource;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +36,7 @@ public class MainView extends AppCompatActivity {
 
 
         TextView message = (TextView) findViewById(R.id.message);
-        message.setText("Willkommen " + getIntent().getExtras().getString(MainActivity.UserID)+"!");
+        message.setText("Willkommen " + getIntent().getExtras().getString("UserID")+"!");
         /*
         myDB = this.openOrCreateDatabase("IUBHtoDoApp", MODE_PRIVATE, null);
         Cursor cursor = myDB.rawQuery("SELECT id, name, description FROM Tasks where userid='"+getIntent().getExtras().getString(MainActivity.UserID)+"'", null);
@@ -107,7 +108,10 @@ public class MainView extends AppCompatActivity {
 }
 
     public void createTodo (View view) {
+
+        String UserID = getIntent().getExtras().getString("UserID");
         Intent createTodo = new Intent(this, TodoCreate.class);
+        createTodo.putExtra("UserID", UserID);
         startActivity(createTodo);
     }
 
