@@ -28,12 +28,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="Name"
             android:ems="10"
             android:id="@+id/name"
             android:layout_below="@+id/view_name"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:hint="Name" />
 
         <TextView
             android:text="Beschreibung"
@@ -48,12 +48,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="Beschreibung"
             android:ems="10"
             android:layout_below="@+id/view_description"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/description" />
+            android:id="@+id/description"
+            android:hint="Beschreibung" />
 
         <TextView
             android:text="Fälligkeitsdatum"
@@ -67,7 +67,7 @@
             android:inputType="date"
             android:ems="10"
             android:id="@+id/completiondate"
-            android:text="Fälligkeitsdatum" />
+            android:hint="Fälligkeitsdatum" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 android:text="Erledigt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/checkBox"
+                android:id="@+id/completionstatus"
                 android:layout_marginTop="14dp"
                 android:layout_below="@+id/view_completionstatus"
                 android:layout_alignParentLeft="true"
@@ -93,10 +93,10 @@
                 android:text="Favorit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/checkBox"
+                android:layout_alignTop="@+id/completionstatus"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/checkBox2" />
+                android:id="@+id/favorite" />
 
             <TextView
                 android:text="Favoritenmerkmal"

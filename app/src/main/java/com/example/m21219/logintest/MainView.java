@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,13 +48,13 @@ public class MainView extends AppCompatActivity {
         this.listView = (ListView) findViewById(R.id.ListView_Tasks);
 
 
-        //this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
+        this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
 
-        //this.adapter = new ToDoOverviewListAdapter(this, dataSource);
-        List<ToDo> dataSource = new ArrayList<>();
+        this.adapter = new ToDoOverviewListAdapter(this, dataSource);
+       /* List<ToDo> dataSource = new ArrayList<>();
         dataSource.add(new ToDo("Einkaufen"));
         dataSource.add(new ToDo("Klausur schreiben", Calendar.getInstance(), true, "Beschreibung", true));
-        dataSource.add(new ToDo("Projektmitglieder updaten", Calendar.getInstance(), false, "haha", true));
+        dataSource.add(new ToDo("Projektmitglieder updaten", Calendar.getInstance(), false, "haha", true));*/
 
         this.listView.setAdapter(new ToDoOverviewListAdapter(this, dataSource));
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,10 +66,10 @@ public class MainView extends AppCompatActivity {
                     ToDo todo = (ToDo) element;
 
 
-                  //  Intent intent = new Intent(MainView.this, ToDoDetailActivity.class);
-                    //intent.putExtra(ToDoDetailActivity.TODO_ID_KEY, todo.getId());
+                    Intent intent = new Intent(MainView.this, TodoCreate.class);
+                    intent.putExtra(TodoCreate.TODO_ID_KEY, todo.getId());
 
-                    //startActivity(intent);
+                    startActivity(intent);
                 }
                 Log.e("ClickOnList", element.toString());
 
@@ -106,7 +109,7 @@ public class MainView extends AppCompatActivity {
         }
     } */
 }
-
+/*
     public void createTodo (View view) {
 
         String UserID = getIntent().getExtras().getString("UserID");
@@ -114,9 +117,55 @@ public class MainView extends AppCompatActivity {
         createTodo.putExtra("UserID", UserID);
         startActivity(createTodo);
     }
+*/
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshListView();
+    }
+
+    public void refreshListView() {
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.sort:
+               this.sort();
+                return true;
+            case R.id.menu_new_todo:
+                this.newTodo();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void sort() {
+        //Hier müssen wir noch was tun!
+    }
+
+    public void newTodo(){
+        Intent i = new Intent(MainView.this, TodoCreate.class);
+        startActivity(i);
+    }
 
 
 }
+
 
 
 

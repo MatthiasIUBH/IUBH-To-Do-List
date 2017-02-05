@@ -18,7 +18,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     public static TodoDatabase INSTANCE = null;
 
     private static final String DB_NAME = "TODOS";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final String TABLE_NAME = "todos";
 
     public static final String ID_COLUMN = "ID";
