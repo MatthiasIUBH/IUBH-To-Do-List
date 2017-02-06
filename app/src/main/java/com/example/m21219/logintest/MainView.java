@@ -130,6 +130,9 @@ public class MainView extends AppCompatActivity {
         dataSource.clear();
         dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
         adapter.notifyDataSetChanged();
+        //macht ToDos direkt nach Erstellung sichtbar
+        listView.invalidateViews();
+        listView.refreshDrawableState();
     }
 
     @Override
