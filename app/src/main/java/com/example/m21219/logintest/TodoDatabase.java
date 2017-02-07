@@ -95,6 +95,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
             todo.setFavorite(cursor.getInt(cursor.getColumnIndex(FAVORITE_COLUMN)) == 1);
 
+            todo.setCompletionstatus(cursor.getInt(cursor.getColumnIndex(COMPLETIONSTATUS_COLUMN)) == 1);
+
             todo.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION_COLUMN)));
 
             todo.setCompletiondate(calendar);
@@ -135,10 +137,9 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         values.put(NAME_COLUMN, todo.getName());
         values.put(COMPLETIONDATE_COLUMN, todo.getCompletiondate() == null ? null : todo.getCompletiondate().getTimeInMillis() / 1000);
         values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
-
+        values.put(COMPLETIONSTATUS_COLUMN, todo.isCompletionstatus() ? 1 : 0);
 
         database.update(TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{String.valueOf(todo.getId())});
-
 
         database.close();
 

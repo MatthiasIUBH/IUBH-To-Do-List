@@ -76,7 +76,7 @@ public class ToDo implements Serializable {
         return completionstatus;
     }
 
-    public void setCompletionstatus(boolean completionstatus) {
+    public void setCompletionstatus(final boolean completionstatus) {
         this.completionstatus = completionstatus;
     }
 }

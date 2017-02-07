@@ -1,8 +1,11 @@
 package com.example.m21219.logintest;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import com.example.m21219.logintest.ToDo;
 
@@ -65,9 +69,8 @@ public class MainView extends AppCompatActivity {
                 if(element instanceof ToDo){
                     ToDo todo = (ToDo) element;
 
-
-                    Intent intent = new Intent(MainView.this, TodoCreate.class);
-                    intent.putExtra(TodoCreate.TODO_ID_KEY, todo.getId());
+                    Intent intent = new Intent(MainView.this, ToDoDetailActivity.class);
+                    intent.putExtra(ToDoDetailActivity.TODO_ID_KEY, todo.getId());
 
                     startActivity(intent);
                 }

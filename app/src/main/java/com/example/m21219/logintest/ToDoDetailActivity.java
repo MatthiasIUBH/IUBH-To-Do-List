@@ -1,7 +1,6 @@
 package com.example.m21219.logintest;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,35 +18,40 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener{
+public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener {
 
-
-    private ToDo todo;
+    public static final String TODO_ID_KEY = "TODO";
 
     private EditText name;
-    private EditText description;
     private TextView completiondate;
+    private EditText description;
     private CheckBox favorite;
     private CheckBox completionstatus;
+    private Button update_button;
 
-    private Button submit;
-
+    private ToDo todo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_todo_create);
+        setContentView(R.layout.activity_to_do_detail);
 
+        long id = getIntent().getLongExtra(TODO_ID_KEY, 0);
+        this.todo = TodoDatabase.getInstance(this).readToDo(id);
 
-        this.todo = new ToDo();
+        update_button = (Button) findViewById(R.id.update_button);
 
-        this.name = (EditText) findViewById(R.id.name);
-        this.description = (EditText) findViewById(R.id.description);
-        this.favorite = (CheckBox) findViewById(R.id.favorite);
-        this.completionstatus = (CheckBox) findViewById(R.id.completionstatus);
-        this.submit = (Button) findViewById(R.id.submit);
+        name = (EditText) findViewById(R.id.name);
+        completiondate = (TextView) findViewById(R.id.completiondate);
+        description = (EditText) findViewById(R.id.description);
+        favorite = (CheckBox) findViewById(R.id.favorite);
+        completionstatus = (CheckBox) findViewById(R.id.completionstatus);
 
-        this.completiondate = (TextView) findViewById(R.id.completiondate);
+        name.setText(todo.getName());
+        completiondate.setText(todo.getCompletiondate() == null ? "-" : getDateInString(todo.getCompletiondate()));
+        description.setText(todo.getDescription() == null ? "-" : todo.getDescription());
+        favorite.setChecked(todo.isFavorite());
+        completionstatus.setChecked(todo.isCompletionstatus());
 
         this.completiondate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,43 +61,7 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
             }
         });
 
-    /*
 
-    public void onClickSubmit (View Submit) {
-
-        //neue ToDo Instanz generieren
-        ToDo newToDo = new ToDo();
-
-
-        //Textfelder auslesen und als String übergeben
-        EditText name = (EditText) findViewById(R.id.name);
-        String sName = name.getText().toString();
-        newToDo.setName(sName);
-
-        EditText description = (EditText) findViewById(R.id.description);
-        String sDescription = description.getText().toString();
-        newToDo.setDescription(sDescription);
-
-        //...
-
-
-
-        //Instanz in Datenbank schreiben
-        TodoDatabase.getInstance(this).createToDo(newToDo);
-
-
-
-        //UserID auslesen
-        String UserID = getIntent().getExtras().getString("UserID");
-
-        //zurück zur Main Activity
-        Intent MainView = new Intent(this, MainView.class);
-        MainView.putExtra("UserID", UserID);
-        startActivity(MainView);
-
-    }
-
-    */
         this.name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -141,15 +109,15 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
             }
         });
 
-        this.submit.setOnClickListener(new View.OnClickListener() {
+        this.update_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 if (todo.getName() == null) {
-                    Toast.makeText(TodoCreate.this, "Fehler beim Speichern, bitte noch einen Namen eingeben.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ToDoDetailActivity.this, "Fehler beim Speichern, bitte noch einen Namen eingeben.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                TodoDatabase.getInstance(TodoCreate.this).createToDo(todo);
+                TodoDatabase.getInstance(ToDoDetailActivity.this).updateToDo(todo);
                 finish();
             }
         });
@@ -179,6 +147,12 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+
+    private String getDateInString(Calendar calendar) {
+        return String.format(Locale.GERMANY, "%02d.%02d.%d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        //return calendar.get(Calendar.DAY_OF_MONTH) + ". " + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
 
