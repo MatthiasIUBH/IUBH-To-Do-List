@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:id="@+id/name"
+        android:id="@+id/view_name"
         android:layout_alignBottom="@+id/favorite_icon"
         android:layout_toRightOf="@+id/favorite_icon"
         android:textSize="18sp" />
@@ -21,18 +21,18 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="56dp"
         android:layout_marginEnd="56dp"
-        android:id="@+id/completiondate"
+        android:id="@+id/view_completiondate"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/name"
+        android:layout_alignBottom="@+id/view_name"
         android:textSize="12sp" />
 
     <ImageView
         app:srcCompat="@android:drawable/checkbox_on_background"
         android:layout_marginRight="7dp"
         android:layout_marginEnd="7dp"
-        android:id="@+id/completionstatus"
-        android:layout_alignBottom="@+id/completiondate"
+        android:id="@+id/view_completionstatus"
+        android:layout_alignBottom="@+id/view_completiondate"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_width="27dp"

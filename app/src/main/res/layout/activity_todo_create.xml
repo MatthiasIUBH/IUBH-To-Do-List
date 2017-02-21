@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_todo_create"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.m21219.logintest.TodoCreate">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/view_name" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/name"
+            android:layout_below="@+id/view_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Name" />
+
+        <TextView
+            android:text="Beschreibung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/view_description" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:layout_below="@+id/view_description"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/description"
+            android:hint="Beschreibung" />
+
+        <TextView
+            android:text="Fälligkeitsdatum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_completiondate" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:id="@+id/completiondate"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="18sp"
+            android:hint="Fälligkeitsdatum"
+            android:ems="10"
+            android:layout_marginTop="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="Erledigungsstatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/view_completionstatus" />
+
+            <CheckBox
+                android:text="Erledigt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/completionstatus"
+                android:layout_marginTop="14dp"
+                android:layout_below="@+id/view_completionstatus"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <CheckBox
+                android:text="Favorit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/completionstatus"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/favorite" />
+
+            <TextView
+                android:text="Favoritenmerkmal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/view_favorite"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:text="Submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="61dp"
+        android:id="@+id/submit"
+        android:onClick="onClickSubmit" />
+
+</RelativeLayout>

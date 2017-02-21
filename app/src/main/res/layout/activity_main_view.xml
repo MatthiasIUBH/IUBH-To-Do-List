@@ -26,4 +26,5 @@
         android:id="@+id/ListView_Tasks"
         android:layout_height="match_parent"
         android:layout_below="@+id/message" />
+
 </RelativeLayout>
