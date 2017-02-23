@@ -40,22 +40,22 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/view_completiondate"
-        android:textSize="12sp"
-        android:layout_marginRight="82dp"
-        android:layout_marginEnd="82dp"
-        android:layout_alignBottom="@+id/view_name"
-        android:layout_toLeftOf="@+id/view_completionstatus"
-        android:layout_toStartOf="@+id/view_completionstatus" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/view_completiondate"
         android:layout_toLeftOf="@+id/view_completionstatus"
         android:layout_toStartOf="@+id/view_completionstatus"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"
         android:id="@+id/view_completiontime" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_completiondate"
+        android:textSize="12sp"
+        android:layout_alignBottom="@+id/view_name"
+        android:layout_toLeftOf="@+id/view_completiontime"
+        android:layout_toStartOf="@+id/view_completiontime"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp" />
 </RelativeLayout>

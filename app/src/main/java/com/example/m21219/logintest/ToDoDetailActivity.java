@@ -150,7 +150,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     @Override
     protected Dialog onCreateDialog(int id){
-        final Calendar c = Calendar.getInstance();
         if (id == DIALOG_ID)
             return new TimePickerDialog(ToDoDetailActivity.this, kTimePickerListener, hour_x, minute_x, true);
         return null;
