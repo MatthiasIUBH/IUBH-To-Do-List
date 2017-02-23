@@ -18,12 +18,13 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     public static TodoDatabase INSTANCE = null;
 
     private static final String DB_NAME = "TODOS";
-    private static final int VERSION = 2;
+    private static final int VERSION = 4;
     private static final String TABLE_NAME = "todos";
 
     public static final String ID_COLUMN = "ID";
     public static final String NAME_COLUMN = "name";
     public static final String COMPLETIONDATE_COLUMN = "completiondate";
+    public static final String COMPLETIONTIME_COLUMN = "completiontime";
     public static final String FAVORITE_COLUMN = "favorite";
     public static final String COMPLETIONSTATUS_COLUMN = "completionstatus";
     public static final String DESCRIPTION_COLUMN ="description";
@@ -43,7 +44,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
-        String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, " + NAME_COLUMN + " TEXT NOT NULL, " + COMPLETIONDATE_COLUMN + " INTEGER DEFAULT NULL, " + FAVORITE_COLUMN + " INTEGER DEFAULT 0, " + DESCRIPTION_COLUMN + " TEXT DEFAULT NULL, " + COMPLETIONSTATUS_COLUMN + " INTEGER DEFAULT 0)";
+        String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, " + NAME_COLUMN + " TEXT NOT NULL, " + COMPLETIONDATE_COLUMN + " INTEGER DEFAULT NULL, "
+                + COMPLETIONTIME_COLUMN + " INTEGER DEFAULT NULL, " + FAVORITE_COLUMN + " INTEGER DEFAULT 0, " + DESCRIPTION_COLUMN + " TEXT DEFAULT NULL, " + COMPLETIONSTATUS_COLUMN + " INTEGER DEFAULT 0)";
 
         sqLiteDatabase.execSQL(createQuery);
     }
@@ -62,6 +64,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(NAME_COLUMN, todo.getName());
         values.put(COMPLETIONDATE_COLUMN, todo.getCompletiondate() == null ? null : todo.getCompletiondate().getTimeInMillis() / 1000);
+        values.put(COMPLETIONTIME_COLUMN, todo.getCompletiontime()== null ? null :todo.getCompletiontime().getTimeInMillis());
         values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
         values.put(DESCRIPTION_COLUMN, todo.getDescription());
         values.put(COMPLETIONSTATUS_COLUMN, todo.isCompletionstatus() ? 1 : 0);
@@ -77,7 +80,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
     public ToDo readToDo(final long id) {
         SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.query(TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, COMPLETIONDATE_COLUMN, FAVORITE_COLUMN, DESCRIPTION_COLUMN, COMPLETIONSTATUS_COLUMN}, ID_COLUMN + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor cursor = database.query(TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, COMPLETIONDATE_COLUMN, COMPLETIONTIME_COLUMN, FAVORITE_COLUMN, DESCRIPTION_COLUMN, COMPLETIONSTATUS_COLUMN}, ID_COLUMN + " = ?", new String[]{String.valueOf(id)}, null, null, null);
 
         ToDo todo = null;
 
@@ -93,6 +96,11 @@ public class TodoDatabase  extends SQLiteOpenHelper {
                 calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COMPLETIONDATE_COLUMN)) * 1000);
             }
 
+            Calendar time = null;
+            if(!cursor.isNull(cursor.getColumnIndex(COMPLETIONTIME_COLUMN))){
+                time = Calendar.getInstance();
+                time.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(COMPLETIONTIME_COLUMN)));
+            }
             todo.setFavorite(cursor.getInt(cursor.getColumnIndex(FAVORITE_COLUMN)) == 1);
 
             todo.setCompletionstatus(cursor.getInt(cursor.getColumnIndex(COMPLETIONSTATUS_COLUMN)) == 1);
@@ -100,6 +108,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
             todo.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION_COLUMN)));
 
             todo.setCompletiondate(calendar);
+
+            todo.setCompletiontime(time);
 
 
         }
@@ -136,6 +146,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
         values.put(NAME_COLUMN, todo.getName());
         values.put(COMPLETIONDATE_COLUMN, todo.getCompletiondate() == null ? null : todo.getCompletiondate().getTimeInMillis() / 1000);
+        values.put(COMPLETIONTIME_COLUMN, todo.getCompletiontime() == null ? null :todo.getCompletiontime().getTimeInMillis());
         values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
         values.put(COMPLETIONSTATUS_COLUMN, todo.isCompletionstatus() ? 1 : 0);
 

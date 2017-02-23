@@ -13,7 +13,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="1">
 
         <TextView
             android:text="Name"
@@ -57,7 +58,7 @@
 
         <TextView
             android:text="Fälligkeitsdatum"
-            android:layout_width="match_parent"
+            android:layout_width="188dp"
             android:layout_height="wrap_content"
             android:id="@+id/view_completiondate" />
 
@@ -71,9 +72,23 @@
             android:ems="10"
             android:layout_marginTop="10dp" />
 
+        <TextView
+            android:text="Fälligkeitsuhrzeit"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/view_completiontime" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/completiontime"
+            android:textSize="18sp"
+            android:layout_height="30dp"
+            android:hint="Uhrzeit" />
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="6.37">
 
             <TextView
                 android:text="Erledigungsstatus"
@@ -108,6 +123,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
+
         </RelativeLayout>
 
     </LinearLayout>

@@ -1,6 +1,8 @@
 package com.example.m21219.logintest;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +16,10 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -23,13 +27,15 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
 
 
     private ToDo todo;
-
+    static final int DIALOG_ID = 0;
+    int hour_x;
+    int minute_x;
     private EditText name;
     private EditText description;
     private TextView completiondate;
+    private TextView completiontime;
     private CheckBox favorite;
     private CheckBox completionstatus;
-
     private Button submit;
 
 
@@ -37,7 +43,6 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_create);
-
 
         this.todo = new ToDo();
 
@@ -48,6 +53,7 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
         this.submit = (Button) findViewById(R.id.submit);
 
         this.completiondate = (TextView) findViewById(R.id.completiondate);
+        this.completiontime = (TextView) findViewById(R.id.completiontime);
 
         this.completiondate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,43 +63,8 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
             }
         });
 
-    /*
+        showTimePickerDialog ();
 
-    public void onClickSubmit (View Submit) {
-
-        //neue ToDo Instanz generieren
-        ToDo newToDo = new ToDo();
-
-
-        //Textfelder auslesen und als String übergeben
-        EditText name = (EditText) findViewById(R.id.name);
-        String sName = name.getText().toString();
-        newToDo.setName(sName);
-
-        EditText description = (EditText) findViewById(R.id.description);
-        String sDescription = description.getText().toString();
-        newToDo.setDescription(sDescription);
-
-        //...
-
-
-
-        //Instanz in Datenbank schreiben
-        TodoDatabase.getInstance(this).createToDo(newToDo);
-
-
-
-        //UserID auslesen
-        String UserID = getIntent().getExtras().getString("UserID");
-
-        //zurück zur Main Activity
-        Intent MainView = new Intent(this, MainView.class);
-        MainView.putExtra("UserID", UserID);
-        startActivity(MainView);
-
-    }
-
-    */
         this.name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -155,6 +126,42 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
         });
 
     }
+
+    //TIMEPICKER
+    public void showTimePickerDialog () {
+    this.completiontime = (TextView) findViewById(R.id.completiontime);
+    this.completiontime.setOnClickListener(new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View view) {
+            showDialog(DIALOG_ID);
+
+        }
+    });
+    }
+
+    @Override
+    public Dialog onCreateDialog(int id){
+        if (id == DIALOG_ID)
+            return new TimePickerDialog(TodoCreate.this, kTimePickerListener, hour_x, minute_x, true);
+        return null;
+    }
+
+    public TimePickerDialog.OnTimeSetListener kTimePickerListener =
+            new TimePickerDialog.OnTimeSetListener() {
+
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    c.set(Calendar.MINUTE, minute);
+                    completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d" , hourOfDay, minute));
+                    todo.setCompletiontime(c);
+
+                }
+            };
+
+    //TIMEPICKER
 
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {

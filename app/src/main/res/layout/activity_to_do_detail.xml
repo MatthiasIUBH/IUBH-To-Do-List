@@ -69,6 +69,18 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="18sp" />
 
+        <TextView
+            android:text="Fälligkeitsuhrzeit"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/view_completiontime" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/completiontime"
+            android:textSize="18sp"
+            android:layout_height="30dp" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

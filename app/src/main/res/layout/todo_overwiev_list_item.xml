@@ -15,18 +15,6 @@
         android:layout_toRightOf="@+id/favorite_icon"
         android:textSize="18sp" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="56dp"
-        android:layout_marginEnd="56dp"
-        android:id="@+id/view_completiondate"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/view_name"
-        android:textSize="12sp" />
-
     <ImageView
         app:srcCompat="@android:drawable/checkbox_on_background"
         android:layout_marginRight="7dp"
@@ -47,4 +35,27 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_completiondate"
+        android:textSize="12sp"
+        android:layout_marginRight="82dp"
+        android:layout_marginEnd="82dp"
+        android:layout_alignBottom="@+id/view_name"
+        android:layout_toLeftOf="@+id/view_completionstatus"
+        android:layout_toStartOf="@+id/view_completionstatus" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/view_completiondate"
+        android:layout_toLeftOf="@+id/view_completionstatus"
+        android:layout_toStartOf="@+id/view_completionstatus"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/view_completiontime" />
 </RelativeLayout>

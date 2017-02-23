@@ -36,6 +36,7 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
         ((TextView) view.findViewById(R.id.view_name)).setText(currentToDo.getName());
 
         TextView completiondate = (TextView) view.findViewById(R.id.view_completiondate);
+        TextView completiontime = (TextView) view.findViewById(R.id.view_completiontime);
         ImageView favorite = (ImageView) view.findViewById(R.id.favorite_icon);
         ImageView completionstatus = (ImageView) view.findViewById(R.id.view_completionstatus);
 
@@ -44,6 +45,13 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
         }else{
             completiondate.setVisibility(View.VISIBLE);
             completiondate.setText(getDateInString(currentToDo.getCompletiondate()));
+        }
+
+        if(currentToDo.getCompletiontime() == null){
+            completiontime.setVisibility(View.GONE);
+        }else {
+            completiontime.setVisibility(View.VISIBLE);
+            completiontime.setText(getTimeInString(currentToDo.getCompletiontime()));
         }
 
         if(currentToDo.isFavorite()){
@@ -61,8 +69,12 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
 
         return view;
     } private String getDateInString(Calendar calendar) {
-        return String.format(Locale.GERMANY, "%02d.%02d.%d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), calendar.get(Calendar.HOUR_OF_DAY));
+        return String.format(Locale.GERMANY, "%02d.%02d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1);
         //return calendar.get(Calendar.DAY_OF_MONTH) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+    }
+
+    private String getTimeInString(Calendar time){
+        return String.format(Locale.GERMANY, "%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
     }
 }
 

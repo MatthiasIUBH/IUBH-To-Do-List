@@ -11,22 +11,26 @@ public class ToDo implements Serializable {
     private long id;
     private String name;
     private Calendar completiondate;
+    private Calendar completiontime;
     private boolean favorite;
     private String   description;
     private boolean completionstatus;
 
 
     public ToDo() {
-        this(null, null, false, null, false);
+        this(null, null, null, false, null, false);
     }
 
     public ToDo(final String name) {
-        this(name, null, false, null, false);
+        this(name, null, null, false, null, false);
     }
 
-    public ToDo(final String name, final Calendar completiondate, final boolean favorite, final String description, final boolean completionstatus) {
+
+
+    public ToDo(final String name, final Calendar completiondate, final Calendar completiontime, final boolean favorite, final String description, final boolean completionstatus) {
         this.name = name;
         this.completiondate = completiondate;
+        this.completiontime = completiontime;
         this.favorite = favorite;
         this.description = description;
         this.completionstatus = completionstatus;
@@ -46,6 +50,14 @@ public class ToDo implements Serializable {
 
     public void setCompletiondate(final Calendar completiondate) {
         this.completiondate = completiondate;
+    }
+
+    public Calendar getCompletiontime() {
+        return completiontime;
+    }
+
+    public void setCompletiontime(Calendar completiontime) {
+        this.completiontime = completiontime;
     }
 
     public long getId() {

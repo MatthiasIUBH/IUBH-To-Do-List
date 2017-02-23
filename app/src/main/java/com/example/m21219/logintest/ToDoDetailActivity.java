@@ -1,6 +1,8 @@
 package com.example.m21219.logintest;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -22,8 +25,12 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     public static final String TODO_ID_KEY = "TODO";
 
+    static final int DIALOG_ID = 0;
+    int hour_x;
+    int minute_x;
     private EditText name;
     private TextView completiondate;
+    private TextView completiontime;
     private EditText description;
     private CheckBox favorite;
     private CheckBox completionstatus;
@@ -40,15 +47,16 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         this.todo = TodoDatabase.getInstance(this).readToDo(id);
 
         update_button = (Button) findViewById(R.id.update_button);
-
         name = (EditText) findViewById(R.id.name);
         completiondate = (TextView) findViewById(R.id.completiondate);
+        completiontime = (TextView) findViewById(R.id.completiontime);
         description = (EditText) findViewById(R.id.description);
         favorite = (CheckBox) findViewById(R.id.favorite);
         completionstatus = (CheckBox) findViewById(R.id.completionstatus);
 
         name.setText(todo.getName());
         completiondate.setText(todo.getCompletiondate() == null ? "-" : getDateInString(todo.getCompletiondate()));
+        completiontime.setText(todo.getCompletiontime() == null ? "-" : getTimeInString(todo.getCompletiontime()));
         description.setText(todo.getDescription() == null ? "-" : todo.getDescription());
         favorite.setChecked(todo.isFavorite());
         completionstatus.setChecked(todo.isCompletionstatus());
@@ -60,6 +68,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
                 datePicker.show(getSupportFragmentManager(), "datePicker");
             }
         });
+
+        showTimePickerDialog();
 
 
         this.name.addTextChangedListener(new TextWatcher() {
@@ -109,6 +119,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
             }
         });
 
+
+
         this.update_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -123,6 +135,41 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         });
 
     }
+
+    public void showTimePickerDialog () {
+        this.completiontime = (TextView) findViewById(R.id.completiontime);
+        this.completiontime.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View view) {
+                showDialog(DIALOG_ID);
+
+            }
+        });
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id){
+        final Calendar c = Calendar.getInstance();
+        if (id == DIALOG_ID)
+            return new TimePickerDialog(ToDoDetailActivity.this, kTimePickerListener, hour_x, minute_x, true);
+        return null;
+    }
+
+    protected TimePickerDialog.OnTimeSetListener kTimePickerListener =
+            new TimePickerDialog.OnTimeSetListener() {
+
+                @Override
+                public void onTimeSet(final TimePicker view, int hourOfDay, int minute) {
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    c.set(Calendar.MINUTE, minute);
+                    completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d" , hourOfDay, minute));
+                    todo.setCompletiontime(c);
+                }
+            };
+
+
 
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {
@@ -155,5 +202,8 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         //return calendar.get(Calendar.DAY_OF_MONTH) + ". " + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
+    private String getTimeInString(Calendar time){
+        return String.format(Locale.GERMANY, "%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
+    }
 
 }
