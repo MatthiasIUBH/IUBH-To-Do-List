@@ -28,6 +28,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     public static final String FAVORITE_COLUMN = "favorite";
     public static final String COMPLETIONSTATUS_COLUMN = "completionstatus";
     public static final String DESCRIPTION_COLUMN ="description";
+    public static final String USERID_COLUMN ="UserID";
 
 
     private TodoDatabase(final Context context) {
@@ -44,7 +45,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
-        String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, " + NAME_COLUMN + " TEXT NOT NULL, " + COMPLETIONDATE_COLUMN + " INTEGER DEFAULT NULL, "
+        String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, "+ USERID_COLUMN + " INTEGER, " + NAME_COLUMN + " TEXT NOT NULL, " + COMPLETIONDATE_COLUMN + " INTEGER DEFAULT NULL, "
                 + COMPLETIONTIME_COLUMN + " INTEGER DEFAULT NULL, " + FAVORITE_COLUMN + " INTEGER DEFAULT 0, " + DESCRIPTION_COLUMN + " TEXT DEFAULT NULL, " + COMPLETIONSTATUS_COLUMN + " INTEGER DEFAULT 0)";
 
         sqLiteDatabase.execSQL(createQuery);
@@ -63,6 +64,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(NAME_COLUMN, todo.getName());
+        //UserID eintragen
+        values.put(USERID_COLUMN, Globals.getUserID());
         values.put(COMPLETIONDATE_COLUMN, todo.getCompletiondate() == null ? null : todo.getCompletiondate().getTimeInMillis() / 1000);
         values.put(COMPLETIONTIME_COLUMN, todo.getCompletiontime()== null ? null :todo.getCompletiontime().getTimeInMillis());
         values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
@@ -123,7 +126,11 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         List<ToDo> todos = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
 
-        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        //Abfrage mit Filter auf UserID
+        String query ="SELECT * FROM " + TABLE_NAME + " WHERE UserID LIKE " + Globals.getUserID();
+        Cursor cursor = database.rawQuery(query,null);
+
+        //Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         if (cursor.moveToFirst()) {
             do {

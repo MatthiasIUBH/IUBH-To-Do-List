@@ -71,8 +71,13 @@ public class MainActivity extends AppCompatActivity {
                     {
                         Toast.makeText(getApplicationContext(), "Login Erfolgreich!", Toast.LENGTH_LONG).show();
 
+                        //UserID Global setzen in Singleton Klasse
+                        Globals.getInstance();
+                        Globals.setUserID(intUserID);
+
+
                         Intent myIntent = new Intent(MainActivity.this, MainView.class);
-                        myIntent.putExtra("UserID", intUserID);
+                        //myIntent.putExtra("UserID", intUserID);
                         MainActivity.this.startActivity(myIntent);
                     }
                     else

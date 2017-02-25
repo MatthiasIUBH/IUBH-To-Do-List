@@ -42,7 +42,11 @@ public class MainView extends AppCompatActivity {
 
 
         TextView message = (TextView) findViewById(R.id.message);
-        message.setText("Willkommen " + getIntent().getExtras().getString("UserID")+"!");
+
+        //Willkommensnachricht mit Globaler UserID ausgeben
+        message.setText("Willkommen " + Globals.getUserID() + "!");
+
+        //message.setText("Willkommen " + getIntent().getExtras().getString("UserID")+"!");
 
         this.listView = (ListView) findViewById(R.id.ListView_Tasks);
 
