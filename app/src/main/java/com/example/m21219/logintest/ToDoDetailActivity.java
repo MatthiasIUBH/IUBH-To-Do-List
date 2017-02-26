@@ -21,13 +21,12 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener {
+public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener{
+
 
     public static final String TODO_ID_KEY = "TODO";
 
-    static final int DIALOG_ID = 0;
-    int hour_x;
-    int minute_x;
     private EditText name;
     private TextView completiondate;
     private TextView completiontime;
@@ -69,8 +68,13 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
             }
         });
 
-        showTimePickerDialog();
-
+        this.completiontime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "timePicker");
+            }
+        });
 
         this.name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -136,40 +140,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     }
 
-    public void showTimePickerDialog () {
-        this.completiontime = (TextView) findViewById(R.id.completiontime);
-        this.completiontime.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View view) {
-                showDialog(DIALOG_ID);
-
-            }
-        });
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id){
-        if (id == DIALOG_ID)
-            return new TimePickerDialog(ToDoDetailActivity.this, kTimePickerListener, hour_x, minute_x, true);
-        return null;
-    }
-
-    protected TimePickerDialog.OnTimeSetListener kTimePickerListener =
-            new TimePickerDialog.OnTimeSetListener() {
-
-                @Override
-                public void onTimeSet(final TimePicker view, int hourOfDay, int minute) {
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    c.set(Calendar.MINUTE, minute);
-                    completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d" , hourOfDay, minute));
-                    todo.setCompletiontime(c);
-                }
-            };
-
-
-
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {
         this.completiondate.setText(String.format(Locale.GERMANY, "%02d.%02d.%d", i2, i1 + 1, i));
@@ -178,6 +148,17 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         c.set(i, i1, i2);
 
         todo.setCompletiondate(c);
+    }
+
+    @Override
+    public void onTimeSet(final TimePicker timePicker, final int hourOfDay, final int minute){
+        this.completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d", hourOfDay, minute));
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+
+        todo.setCompletiontime(c);
     }
 
     @Override

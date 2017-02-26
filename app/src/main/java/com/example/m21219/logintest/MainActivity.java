@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import static android.R.attr.name;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,9 +74,8 @@ public class MainActivity extends AppCompatActivity {
                         Globals.getInstance();
                         Globals.setUserID(intUserID);
 
-
                         Intent myIntent = new Intent(MainActivity.this, MainView.class);
-                        //myIntent.putExtra("UserID", intUserID);
+                        myIntent.putExtra("UserName", userName);
                         MainActivity.this.startActivity(myIntent);
                     }
                     else

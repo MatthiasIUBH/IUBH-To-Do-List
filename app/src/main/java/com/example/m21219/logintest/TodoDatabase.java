@@ -176,18 +176,5 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         database.close();
     }
 
-    public Cursor getAllTodosAsCursor() {
-        return this.getReadableDatabase().rawQuery("SELECT " + ID_COLUMN + " as _id, " + NAME_COLUMN + "," + COMPLETIONDATE_COLUMN + " FROM " + TABLE_NAME, null);
-    }
-
-    public ToDo getFirstTodo() {
-        List<ToDo> todos = this.readAllToDos();
-
-        if (todos.size() > 0) {
-            return todos.get(0);
-        }
-
-        return null;
-    }
 }
 

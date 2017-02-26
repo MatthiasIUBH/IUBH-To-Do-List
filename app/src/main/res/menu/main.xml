@@ -8,8 +8,20 @@
     android:title="new todo"
     app:showAsAction="ifRoom"
     android:icon="@android:drawable/ic_menu_add" />
-    <item android:title="Sortieren"
+    <item android:title="Heute"
         android:orderInCategory="101"
+        app:showAsAction="never"
+        android:id="@+id/heute" />
+    <item android:title="Sortieren"
+        android:orderInCategory="102"
         android:id="@+id/sort"
+        app:showAsAction="never" />
+    <item android:title="Alles löschen"
+        android:orderInCategory="103"
+        android:id="@+id/clearAll"
+        app:showAsAction="never" />
+    <item android:title="Teilen"
+        android:id="@+id/share"
+        android:orderInCategory="104"
         app:showAsAction="never" />
 </menu>

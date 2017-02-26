@@ -1,10 +1,7 @@
 package com.example.m21219.logintest;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,22 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
-import com.example.m21219.logintest.ToDo;
 
 public class MainView extends AppCompatActivity {
 
-    SQLiteDatabase myDB=null;
     private ListView listView;
     private ToDoOverviewListAdapter adapter;
     private List<ToDo> dataSource;
@@ -43,10 +31,9 @@ public class MainView extends AppCompatActivity {
 
         TextView message = (TextView) findViewById(R.id.message);
 
-        //Willkommensnachricht mit Globaler UserID ausgeben
-        message.setText("Willkommen " + Globals.getUserID() + "!");
+        //Willkommensnachricht mit UserName ausgeben
+        message.setText("Willkommen " + getIntent().getExtras().getString("UserName") + "!");
 
-        //message.setText("Willkommen " + getIntent().getExtras().getString("UserID")+"!");
 
         this.listView = (ListView) findViewById(R.id.ListView_Tasks);
 
@@ -69,7 +56,31 @@ public class MainView extends AppCompatActivity {
                     startActivity(intent);
                 }
                 Log.e("ClickOnList", element.toString());
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int position, long id) {
+                Object element = adapterView.getAdapter().getItem(position);
 
+                if(element instanceof ToDo){
+                    final ToDo todo = (ToDo)element;
+                    new AlertDialog.Builder(MainView.this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Sind Sie sicher?")
+                            .setMessage("Möchten Sie diesen Eintrag löschen?")
+                            .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    TodoDatabase.getInstance(MainView.this).deleteToDo(todo);
+                                    refreshListView();
+                                }
+                            })
+                            .setNegativeButton("Nein", null)
+                            .show();
+                }
+                return true;
             }
         });
     }
@@ -89,6 +100,7 @@ public class MainView extends AppCompatActivity {
         listView.refreshDrawableState();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -106,20 +118,44 @@ public class MainView extends AppCompatActivity {
             case R.id.menu_new_todo:
                 this.newTodo();
                 return true;
+            case R.id.clearAll:
+                this.clearAll();
+                return true;
+            case R.id.heute:
+                this.heute();
+                return true;
+            case R.id.share:
+                this.share();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void share() {
+        //Hier müssen wir was tun!
+    }
+
+    private void heute() {
+        //Hier müssen wir was tun!
+    }
+
+
+    private void clearAll() {
+        TodoDatabase database = TodoDatabase.getInstance(MainView.this);
+        database.deleteAllToDos();
+        refreshListView();
     }
 
     public void sort() {
         //Hier müssen wir noch was tun!
     }
 
+
     public void newTodo(){
         Intent i = new Intent(MainView.this, TodoCreate.class);
         startActivity(i);
     }
-
 
 }
 
