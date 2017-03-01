@@ -1,10 +1,13 @@
 package com.example.m21219.logintest;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +16,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -21,6 +34,8 @@ public class MainView extends AppCompatActivity {
     private ListView listView;
     private ToDoOverviewListAdapter adapter;
     private List<ToDo> dataSource;
+    private List<ToDo> dataexport;
+
 
 
     @Override
@@ -124,18 +139,48 @@ public class MainView extends AppCompatActivity {
             case R.id.heute:
                 this.heute();
                 return true;
-            case R.id.share:
-                this.share();
+            case R.id.export:
+                this.export();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void share() {
-        //Hier müssen wir was tun!
-    }
+    private void export() {
+        try {
+            String OutputString="";
+            SimpleDateFormat simpleDate =  new SimpleDateFormat("dd.MM.yyyy");
+            this.dataexport = TodoDatabase.getInstance(this).readAllToDos();
 
+            FileOutputStream fOut = openFileOutput("Export.csv", Context.MODE_PRIVATE);
+            OutputStreamWriter outputstream = new OutputStreamWriter(fOut);
+
+            // Schreibe Daten in die Datei "Export.csv" unter \data\data\com.example.m21219.logintest\files
+            OutputString+="Name;Beschreibung;Erledigungsstatus;Favorit;Erledigungsdatum\n"; //Kopfzeile schreiben
+
+            //Daten schreiben
+            for (ToDo s : dataexport) {
+                OutputString+= s.getName().toString() + ";"+s.getDescription().toString()+ ";"+s.isCompletionstatus()+";"+s.isFavorite()+";";
+
+                if ( s.getCompletiondate() == null) {
+                    OutputString+="\n";
+                }
+                else {
+                    OutputString+= simpleDate.format(s.getCompletiondate().getTime())+"\n";
+                }
+            }
+
+            //Datei schreiben
+            outputstream.write(OutputString);
+            outputstream.flush();
+            outputstream.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
     private void heute() {
         //Hier müssen wir was tun!
     }

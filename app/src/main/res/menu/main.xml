@@ -20,8 +20,8 @@
         android:orderInCategory="103"
         android:id="@+id/clearAll"
         app:showAsAction="never" />
-    <item android:title="Teilen"
-        android:id="@+id/share"
+    <item android:title="Exportieren"
+        android:id="@+id/export"
         android:orderInCategory="104"
         app:showAsAction="never" />
 </menu>
