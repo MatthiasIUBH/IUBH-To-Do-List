@@ -7,16 +7,20 @@ import java.util.Calendar;
  * Created by Hakan Akkurt on 03.02.2017.
  */
 
+/*Diese Klasse beinhaltet die für Verändern und Lesen der Daten benötigten getter und setter Methoden und Konstruktoren.
+  Serialisierung ist ein Mechanismus, bei dem Objekte in eine Folge von Bytes verwandelt und
+  umgekehrt daraus wieder Objekte erzeugt werden.
+ */
 public class ToDo implements Serializable {
     private long id;
     private String name;
     private Calendar completiondate;
     private Calendar completiontime;
     private boolean favorite;
-    private String   description;
+    private String description;
     private boolean completionstatus;
 
-
+    //Die Defeaultwerte von Todos auf null bzw. false setzen
     public ToDo() {
         this(null, null, null, false, null, false);
     }
@@ -24,7 +28,6 @@ public class ToDo implements Serializable {
     public ToDo(final String name) {
         this(name, null, null, false, null, false);
     }
-
 
 
     public ToDo(final String name, final Calendar completiondate, final Calendar completiontime, final boolean favorite, final String description, final boolean completionstatus) {

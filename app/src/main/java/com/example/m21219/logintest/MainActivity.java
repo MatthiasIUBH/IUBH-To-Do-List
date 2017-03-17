@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
+/*Diese Klasse ist für die Loginfunktion zuständig, beinhaltet die User und Passwörter und vergleicht
+sie mit den eingegebenen Werten*/
 public class MainActivity extends AppCompatActivity {
 
     public static final String UserID = "";

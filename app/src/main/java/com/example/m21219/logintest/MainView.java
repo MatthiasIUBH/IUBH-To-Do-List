@@ -28,6 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/* Diese Activity wird aufgerufen, wenn der Benutzer richtige Userdaten eingegeben hat und zeigt eine ListView, bei der
+die gespeicherten Todos aufgelistet sind*/
 
 public class MainView extends AppCompatActivity {
 
@@ -57,14 +59,16 @@ public class MainView extends AppCompatActivity {
         this.adapter = new ToDoOverviewListAdapter(this, dataSource);
 
         this.listView.setAdapter(new ToDoOverviewListAdapter(this, dataSource));
+
+        //Ein Listener, um festzustellen, ob der Benutzer ein Eintrag in der Liste angeklickt hat.
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, int position, long id) {
                 Object element = adapterView.getAdapter().getItem(position);
 
-                if(element instanceof ToDo){
+                if(element instanceof ToDo){    //Wenn der Eintrag eine Instanz von der Klasse "To_Do" ist:
                     ToDo todo = (ToDo) element;
-
+                    //Wird die Activity "ToDoDetailActivity" aufgerufen
                     Intent intent = new Intent(MainView.this, ToDoDetailActivity.class);
                     intent.putExtra(ToDoDetailActivity.TODO_ID_KEY, todo.getId());
 
@@ -73,6 +77,8 @@ public class MainView extends AppCompatActivity {
                 Log.e("ClickOnList", element.toString());
             }
         });
+
+        //Ein Listener, der beim langen Drücken auf einen Eintrag in der Liste ein Dialog aufruft
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int position, long id) {
@@ -84,15 +90,15 @@ public class MainView extends AppCompatActivity {
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle("Sind Sie sicher?")
                             .setMessage("Möchten Sie diesen Eintrag löschen?")
-                            .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Ja", new DialogInterface.OnClickListener() { // Wenn der Benutzer auf "Ja" klickt:
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
+                                    //Wird die "deleteTodo"Funktion der Klasse "TodoDatabase" aufgerufen.
                                     TodoDatabase.getInstance(MainView.this).deleteToDo(todo);
-                                    refreshListView();
+                                    refreshListView(); //Nachdem Löschen wird die Liste aktualisiert.
                                 }
                             })
-                            .setNegativeButton("Nein", null)
+                            .setNegativeButton("Nein", null) //Beim "Nein" passiert nichts.
                             .show();
                 }
                 return true;
@@ -106,6 +112,7 @@ public class MainView extends AppCompatActivity {
         refreshListView();
     }
 
+    //Wir löschen die Datenbank und erstellen sie neu mit den gespeicherten Todos
     public void refreshListView() {
         dataSource.clear();
         dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
@@ -123,6 +130,7 @@ public class MainView extends AppCompatActivity {
         return true;
     }
 
+    //Hier werden die einzelnen Buttons mit Methoden verbunden
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
@@ -185,7 +193,7 @@ public class MainView extends AppCompatActivity {
         //Hier müssen wir was tun!
     }
 
-
+    //Diese Funktion löscht alle Einträge mithilfe von der Methode "deleteAllTodos" der Klasse "TodoDatabase"
     private void clearAll() {
         TodoDatabase database = TodoDatabase.getInstance(MainView.this);
         database.deleteAllToDos();
@@ -198,7 +206,7 @@ public class MainView extends AppCompatActivity {
 
 
     public void newTodo(){
-        Intent i = new Intent(MainView.this, TodoCreate.class);
+        Intent i = new Intent(MainView.this, TodoCreate.class); // Hier wird die "TodoCreate" Activitiy initialisiert und anschlißend gestartet.
         startActivity(i);
     }
 
