@@ -39,6 +39,7 @@ public class ToDo implements Serializable {
         this.completionstatus = completionstatus;
     }
 
+    //Getter und Setter Methoden
     public String getName() {
         return name;
     }
