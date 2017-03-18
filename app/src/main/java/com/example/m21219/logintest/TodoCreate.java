@@ -19,6 +19,11 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Locale;
 
+
+/*Diese Klasse bzw. Activity wird aufgerufen, wenn der User einen neuen Eintrag eingeben und anschließend speichern möchte.
+ Wir implentieren die Schnitstellen "TextWatcher", da wir Text eingeben und bearbeiten, "DatePickerDialog.OnDateSetListener" und
+ "TimePickerDialog.OnTimeSetListener, damit werden die Dialogfenster mit Kalender und Uhr aufgerufen.*/
+
 public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener{
 
@@ -47,6 +52,7 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
         this.completiondate = (TextView) findViewById(R.id.completiondate);
         this.completiontime = (TextView) findViewById(R.id.completiontime);
 
+        //OnClickListener für jeweils Kalender- und Uhranzeige.
         this.completiondate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -63,7 +69,7 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
             }
         });
 
-
+        //Listener für Texteingabe
         this.name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -114,7 +120,7 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
         this.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (todo.getName() == null) {
+                if (todo.getName() == null) { //Die Prüfung, ob der Name des Eintrags "null" ist oder nicht.
                     Toast.makeText(TodoCreate.this, "Fehler beim Speichern, bitte noch einen Namen eingeben.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -128,23 +134,23 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
 
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {
-        this.completiondate.setText(String.format(Locale.GERMANY, "%02d.%02d.%d", i2, i1 + 1, i));
+        this.completiondate.setText(String.format(Locale.GERMANY, "%02d.%02d.%d", i2, i1 + 1, i));  //Datumsformat festlegen
 
         Calendar c = Calendar.getInstance();
         c.set(i, i1, i2);
 
-        todo.setCompletiondate(c);
+        todo.setCompletiondate(c);//Das Systemdatum wird als Defaultwert genommen
     }
 
     @Override
     public void onTimeSet(final TimePicker timePicker, final int hourOfDay, final int minute){
-        this.completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d", hourOfDay, minute));
+        this.completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d", hourOfDay, minute)); //Zeitformat festlegen.
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
         c.set(Calendar.MINUTE, minute);
 
-        todo.setCompletiontime(c);
+        todo.setCompletiontime(c);//Die Systemzeit wird als Defaultwert genommen.
     }
 
     @Override

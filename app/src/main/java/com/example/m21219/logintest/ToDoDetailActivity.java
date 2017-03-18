@@ -21,6 +21,10 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Locale;
 
+/*Diese Klasse bzw. Activity wird aufgerufen, wenn der User einen gespeicherten Eintrag anklickt. Anschließend hat man die Möglichkeit
+alle gespeicherten Werte zu ändern und zu speichern. Wir implentieren ebenfalls wie in der "TodoCreate-Activity" die Schnitstellen "TextWatcher",
+da wir Text eingeben und bearbeiten, "DatePickerDialog.OnDateSetListener" und "TimePickerDialog.OnTimeSetListener,
+damit werden die Dialogfenster mit Kalender und Uhr aufgerufen.*/
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener{
 
@@ -60,6 +64,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         favorite.setChecked(todo.isFavorite());
         completionstatus.setChecked(todo.isCompletionstatus());
 
+        //OnClickListener für jeweils Kalender- und Uhranzeige.
         this.completiondate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -76,6 +81,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
             }
         });
 
+        //Listener für Texteingabe
         this.name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -128,7 +134,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         this.update_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (todo.getName() == null) {
+                if (todo.getName() == null) { //Die Prüfung, ob der Name des Eintrags "null" ist oder nicht.
                     Toast.makeText(ToDoDetailActivity.this, "Fehler beim Speichern, bitte noch einen Namen eingeben.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -142,23 +148,23 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
 
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {
-        this.completiondate.setText(String.format(Locale.GERMANY, "%02d.%02d.%d", i2, i1 + 1, i));
+        this.completiondate.setText(String.format(Locale.GERMANY, "%02d.%02d.%d", i2, i1 + 1, i)); //Datumsformat festlegen
 
         Calendar c = Calendar.getInstance();
         c.set(i, i1, i2);
 
-        todo.setCompletiondate(c);
+        todo.setCompletiondate(c); //Das Systemdatum wird als Defaultwert genommen.
     }
 
     @Override
     public void onTimeSet(final TimePicker timePicker, final int hourOfDay, final int minute){
-        this.completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d", hourOfDay, minute));
+        this.completiontime.setText(String.format(Locale.GERMANY, "%02d:%02d", hourOfDay, minute)); //Zeitformatfestlegen
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
         c.set(Calendar.MINUTE, minute);
 
-        todo.setCompletiontime(c);
+        todo.setCompletiontime(c); //Die Systemzeit wird als Defaultwert genommen.
     }
 
     @Override
@@ -177,11 +183,12 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     }
 
 
+    //Hier wird das Datum in String umgewandelt.
     private String getDateInString(Calendar calendar) {
         return String.format(Locale.GERMANY, "%02d.%02d.%d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        //return calendar.get(Calendar.DAY_OF_MONTH) + ". " + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
+    //Hier wird die Uhrzeit in String umgewandelt.
     private String getTimeInString(Calendar time){
         return String.format(Locale.GERMANY, "%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
     }

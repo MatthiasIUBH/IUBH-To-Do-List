@@ -17,6 +17,7 @@ import java.util.Locale;
  * Created by Hakan Akkurt on 03.02.2017.
  */
 
+/* Diese Klasse stellt uns die ArrayAdapter für Todo_Übersicht zur Verfügung und erbt von der Klasse "ArrayAdapter*/
 public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
     public  ToDoOverviewListAdapter(final Context context, final List<ToDo> objects) {
         super(context, 0, objects);
@@ -30,7 +31,7 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
         View view = convertView;
 
         if (view == null){
-            view = LayoutInflater.from(getContext()).inflate(R.layout.todo_overwiev_list_item, parent, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.todo_overwiev_list_item, parent, false); //Die Struktur von Todos wird hier übernommen.
         }
 
         ((TextView) view.findViewById(R.id.view_name)).setText(currentToDo.getName());
@@ -40,37 +41,37 @@ public class ToDoOverviewListAdapter extends ArrayAdapter<ToDo> {
         ImageView favorite = (ImageView) view.findViewById(R.id.favorite_icon);
         ImageView completionstatus = (ImageView) view.findViewById(R.id.view_completionstatus);
 
-        if(currentToDo.getCompletiondate()== null){
-            completiondate.setVisibility(View.GONE);
+        if(currentToDo.getCompletiondate()== null){//Wenn das CompletionDate leer ist
+            completiondate.setVisibility(View.GONE); // Wird der TextView versteckt
         }else{
-            completiondate.setVisibility(View.VISIBLE);
-            completiondate.setText(getDateInString(currentToDo.getCompletiondate()));
+            completiondate.setVisibility(View.VISIBLE); //Sonst angezeigt
+            completiondate.setText(getDateInString(currentToDo.getCompletiondate()));// Mit dem eingegeben Wert.
         }
 
-        if(currentToDo.getCompletiontime() == null){
-            completiontime.setVisibility(View.GONE);
+        if(currentToDo.getCompletiontime() == null){ //Wenn das CompletionTime leer ist
+            completiontime.setVisibility(View.GONE); // Wird der TextView versteckt
         }else {
-            completiontime.setVisibility(View.VISIBLE);
-            completiontime.setText(getTimeInString(currentToDo.getCompletiontime()));
+            completiontime.setVisibility(View.VISIBLE);//Sonst angezeigt
+            completiontime.setText(getTimeInString(currentToDo.getCompletiontime()));// Mit dem eingebenen Wert.
         }
 
-        if(currentToDo.isFavorite()){
-            favorite.setVisibility(View.VISIBLE);
+        if(currentToDo.isFavorite()){//Wenn das Favorite-Feld angeklickt ist
+            favorite.setVisibility(View.VISIBLE); //Wird das Favorite-Icon angezeigt.
             favorite.setImageResource(R.mipmap.ic_star);
         }else{
-            favorite.setVisibility(View.INVISIBLE);
+            favorite.setVisibility(View.INVISIBLE);//Sonst versteckt.
         }
-        if(currentToDo.isCompletionstatus()) {
-            completionstatus.setVisibility(View.VISIBLE);
+        if(currentToDo.isCompletionstatus()) {//Wenn das Erledigt-Feld angeklickt ist
+            completionstatus.setVisibility(View.VISIBLE); //Wird das Erledigt-Icon angezeigt.
             completionstatus.setImageResource(R.mipmap.ic_checkedbox);
         } else {
-            completionstatus.setVisibility(View.INVISIBLE);
+            completionstatus.setVisibility(View.INVISIBLE);//Sonst versteckt.
         }
 
         return view;
+        //Das Datum und die Uhrzeit wird mit gewünschtem Format in der View angezeigt.
     } private String getDateInString(Calendar calendar) {
         return String.format(Locale.GERMANY, "%02d.%02d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1);
-        //return calendar.get(Calendar.DAY_OF_MONTH) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     private String getTimeInString(Calendar time){

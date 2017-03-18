@@ -14,6 +14,7 @@ import java.util.List;
  * Created by Hakan Akkurt on 03.02.2017.
  */
 
+/*Diese Klasse stellt uns eine SQL Datenbank für Todos zur Verfügung*/
 public class TodoDatabase  extends SQLiteOpenHelper {
     public static TodoDatabase INSTANCE = null;
 
@@ -43,6 +44,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         return INSTANCE;
     }
 
+    //Hier wird die SQL-Befehl zum speichern von Todos als String erstellt.
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
         String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, "+ USERID_COLUMN + " INTEGER, " + NAME_COLUMN + " TEXT NOT NULL, " + COMPLETIONDATE_COLUMN + " INTEGER DEFAULT NULL, "
@@ -59,6 +61,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    //Mit dieser Befehl werden Todos gespeichert.
     public ToDo createToDo(final ToDo todo) {
         SQLiteDatabase database = this.getWritableDatabase();
 
@@ -81,6 +84,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
     }
 
+    //Die Methode zum Auslesen von gespeicherten Todos
     public ToDo readToDo(final long id) {
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.query(TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, COMPLETIONDATE_COLUMN, COMPLETIONTIME_COLUMN, FAVORITE_COLUMN, DESCRIPTION_COLUMN, COMPLETIONSTATUS_COLUMN}, ID_COLUMN + " = ?", new String[]{String.valueOf(id)}, null, null, null);
@@ -122,6 +126,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         return todo;
     }
 
+    //Auflisten von allen, benutzerbezogenen Todos
     public List<ToDo> readAllToDos() {
         List<ToDo> todos = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
@@ -146,6 +151,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         return todos;
     }
 
+    //Mit dieser Methode werden die Todos aktualisiert und erneut gespeichert.
     public ToDo updateToDo(final ToDo todo) {
         SQLiteDatabase database = this.getReadableDatabase();
 
@@ -164,12 +170,14 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         return this.readToDo(todo.getId());
     }
 
+    //Löschen von einzelnen Todos
     public void deleteToDo(final ToDo todo) {
         SQLiteDatabase database = this.getWritableDatabase();
         database.delete(TABLE_NAME, ID_COLUMN + " = ?", new String[]{String.valueOf(todo.getId())});
         database.close();
     }
 
+    //Löschen von allen Todos
     public void deleteAllToDos() {
         SQLiteDatabase database = this.getWritableDatabase();
         database.execSQL("DELETE FROM " + TABLE_NAME);
