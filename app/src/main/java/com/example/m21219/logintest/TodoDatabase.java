@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Hakan Akkurt on 03.02.2017.
@@ -158,8 +159,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         List<ToDo> todos = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
 
-        String today = new SimpleDateFormat("dd.MM.yyyy").format(new Date());
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPLETIONDATE_COLUMN + "= '" +  today +  "'";
+        String today = new SimpleDateFormat("dd.MM.yy", Locale.GERMANY).format(new Date());
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE completiondate LIKE " + "'" + '%' +  today + '%' + "'";
         Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
