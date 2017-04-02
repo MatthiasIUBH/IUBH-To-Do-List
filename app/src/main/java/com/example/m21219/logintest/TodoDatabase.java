@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -136,6 +138,29 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery(query,null);
 
         //Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ToDo todo = readToDo(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)));
+                if (todo != null) {
+                    todos.add(todo);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        database.close();
+
+        return todos;
+    }
+
+
+    public List<ToDo> heute(){
+        List<ToDo> todos = new ArrayList<>();
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        String today = new SimpleDateFormat("dd.MM.yyyy").format(new Date());
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COMPLETIONDATE_COLUMN + "= '" +  today +  "'";
+        Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {

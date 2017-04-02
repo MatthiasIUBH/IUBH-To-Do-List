@@ -191,6 +191,10 @@ public class MainView extends AppCompatActivity {
     }
     private void heute() {
         //Hier müssen wir was tun!
+        TodoDatabase database = TodoDatabase.getInstance(MainView.this);
+        database.heute();
+        refreshListView();
+
     }
 
     //Diese Funktion löscht alle Einträge mithilfe von der Methode "deleteAllTodos" der Klasse "TodoDatabase"
