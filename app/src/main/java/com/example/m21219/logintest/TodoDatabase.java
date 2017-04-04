@@ -6,10 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -130,12 +132,40 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     }
 
     //Auflisten von allen, benutzerbezogenen Todos
-    public List<ToDo> readAllToDos() {
+    public List<ToDo> readAllToDos(final String Parameter) {
         List<ToDo> todos = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
 
         //Abfrage mit Filter auf UserID
         String query ="SELECT * FROM " + TABLE_NAME + " WHERE UserID LIKE " + Globals.getUserID();
+
+        //Extra Parameter für das SQL Query hinzufügen
+        switch (Parameter) {
+            case "FAV":
+                query += " order by favorite DESC" ;
+                break;
+            case "STATUS":
+                query += " order by completionstatus DESC" ;
+                break;
+            case "DATE":
+                query += " order by completiondate" ;
+                break;
+            case "TODAY":
+                //UNIX Timestamps für heute 00:00 und 24:00 Berechnen
+                Calendar TodayStart = new GregorianCalendar();
+                TodayStart.set(Calendar.HOUR_OF_DAY, 0);
+                TodayStart.set(Calendar.MINUTE, 0);
+                TodayStart.set(Calendar.SECOND, 0);
+                TodayStart.set(Calendar.MILLISECOND, 0);
+                long A = TodayStart.getTimeInMillis()/ 1000;
+                TodayStart.add(Calendar.DAY_OF_MONTH, 1);
+                long B = TodayStart.getTimeInMillis()/ 1000;
+
+                query += " AND completiondate between '" + A + "' and '"+B+"'";
+                break;
+            default: ;
+                break;
+        }
         Cursor cursor = database.rawQuery(query,null);
 
         //Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
@@ -155,7 +185,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     }
 
 
-    public List<ToDo> heute(){
+    /*public List<ToDo> heute(){
         List<ToDo> todos = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
 
@@ -175,7 +205,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         database.close();
 
         return todos;
-    }
+    }*/
 
     //Mit dieser Methode werden die Todos aktualisiert und erneut gespeichert.
     public ToDo updateToDo(final ToDo todo) {

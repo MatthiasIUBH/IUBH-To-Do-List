@@ -54,7 +54,7 @@ public class MainView extends AppCompatActivity {
 
         this.listView = (ListView) findViewById(R.id.ListView_Tasks);
 
-        this.dataSource = TodoDatabase.getInstance(this).readAllToDos();
+        this.dataSource = TodoDatabase.getInstance(this).readAllToDos("NONE");
 
         this.adapter = new ToDoOverviewListAdapter(this, dataSource);
 
@@ -115,7 +115,7 @@ public class MainView extends AppCompatActivity {
     //Wir löschen die Datenbank und erstellen sie neu mit den gespeicherten Todos
     public void refreshListView() {
         dataSource.clear();
-        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos());
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos("NONE"));
         adapter.notifyDataSetChanged();
         //macht ToDos direkt nach Erstellung sichtbar
         listView.invalidateViews();
@@ -135,8 +135,14 @@ public class MainView extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.sort:
-               this.sort();
+            case R.id.sortfav:
+               this.sortfav();
+                return true;
+            case R.id.sortdate:
+                this.sortdate();
+                return true;
+            case R.id.sortstatus:
+                this.sortstatus();
                 return true;
             case R.id.menu_new_todo:
                 this.newTodo();
@@ -159,7 +165,7 @@ public class MainView extends AppCompatActivity {
         try {
             String OutputString="";
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd.MM.yyyy");
-            this.dataexport = TodoDatabase.getInstance(this).readAllToDos();
+            this.dataexport = TodoDatabase.getInstance(this).readAllToDos("NONE");
 
             FileOutputStream fOut = openFileOutput("Export.csv", Context.MODE_PRIVATE);
             OutputStreamWriter outputstream = new OutputStreamWriter(fOut);
@@ -190,10 +196,12 @@ public class MainView extends AppCompatActivity {
         }
     }
     private void heute() {
-        //Hier müssen wir was tun!
-        TodoDatabase database = TodoDatabase.getInstance(MainView.this);
-        database.heute();
-        refreshListView();
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos("TODAY"));
+        adapter.notifyDataSetChanged();
+        //macht ToDos direkt nach Erstellung sichtbar
+        listView.invalidateViews();
+        listView.refreshDrawableState();
 
     }
 
@@ -204,8 +212,31 @@ public class MainView extends AppCompatActivity {
         refreshListView();
     }
 
-    public void sort() {
-        //Hier müssen wir noch was tun!
+    public void sortfav() {
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos("FAV"));
+        adapter.notifyDataSetChanged();
+        //macht ToDos direkt nach Erstellung sichtbar
+        listView.invalidateViews();
+        listView.refreshDrawableState();
+    }
+
+    public void sortdate() {
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos("DATE"));
+        adapter.notifyDataSetChanged();
+        //macht ToDos direkt nach Erstellung sichtbar
+        listView.invalidateViews();
+        listView.refreshDrawableState();
+    }
+
+    public void sortstatus() {
+        dataSource.clear();
+        dataSource.addAll(TodoDatabase.getInstance(this).readAllToDos("STATUS"));
+        adapter.notifyDataSetChanged();
+        //macht ToDos direkt nach Erstellung sichtbar
+        listView.invalidateViews();
+        listView.refreshDrawableState();
     }
 
 
