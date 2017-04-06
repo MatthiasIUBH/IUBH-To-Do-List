@@ -1,7 +1,14 @@
 package com.example.m21219.logintest;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +23,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -25,7 +41,7 @@ import java.util.Locale;
  "TimePickerDialog.OnTimeSetListener, damit werden die Dialogfenster mit Kalender und Uhr aufgerufen.*/
 
 public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener{
+        TimePickerDialog.OnTimeSetListener, OnMapReadyCallback, LocationListener{
 
     private ToDo todo;
     private EditText name;
@@ -35,13 +51,22 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
     private CheckBox favorite;
     private CheckBox completionstatus;
     private Button submit;
+    public Button currentPosition;
+    public GoogleMap map;
+    private Marker marker;
+    private LocationManager locationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_create);
 
+        this.currentPosition = (Button) findViewById(R.id.currentPosition);
         this.todo = new ToDo();
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         this.name = (EditText) findViewById(R.id.name);
         this.description = (EditText) findViewById(R.id.description);
@@ -51,6 +76,17 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
 
         this.completiondate = (TextView) findViewById(R.id.completiondate);
         this.completiontime = (TextView) findViewById(R.id.completiontime);
+
+        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (this.currentPosition != null) {
+            this.currentPosition.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    searchPosition();
+                }
+            });
+        }
 
         //OnClickListener für jeweils Kalender- und Uhranzeige.
         this.completiondate.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +168,84 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
 
     }
 
+    private void searchPosition() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.requestPermission(5);
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 50, this);
+    }
+
+    @Override
+    public void onMapReady(final GoogleMap googleMap) {
+        this.map = googleMap;
+    }
+
+
+    @Override
+    public void onLocationChanged(final Location location) {
+        LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+
+        todo.setLocation(position);
+
+        if (this.map != null) {
+
+            if (this.marker != null) {
+                this.marker.remove();
+            }
+
+            this.marker = map.addMarker(new MarkerOptions().position(position));
+
+            this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
+        }
+
+        removeListener();
+    }
+
+    private void removeListener() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.requestPermission(4);
+        }
+        this.locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(final String s, final int i, final Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(final String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(final String s) {
+
+    }
+
+    private void requestPermission(final int resultCode) {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, resultCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        switch (requestCode) {
+            case 5:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    searchPosition();
+                }
+                break;
+            case 4:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    removeListener();
+                }
+                break;
+        }
+    }
+
+
+
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {
         this.completiondate.setText(String.format(Locale.GERMANY, "%02d.%02d.%d", i2, i1 + 1, i));  //Datumsformat festlegen
@@ -167,6 +281,5 @@ public class TodoCreate extends AppCompatActivity implements TextWatcher, DatePi
     public void afterTextChanged(Editable s) {
 
     }
-
 
 }

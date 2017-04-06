@@ -1,5 +1,7 @@
 package com.example.m21219.logintest;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -19,24 +21,26 @@ public class ToDo implements Serializable {
     private boolean favorite;
     private String description;
     private boolean completionstatus;
+    private LatLng location;
 
     //Die Defeaultwerte von Todos auf null bzw. false setzen
     public ToDo() {
-        this(null, null, null, false, null, false);
+        this(null, null, null, false, null, false, null);
     }
 
     public ToDo(final String name) {
-        this(name, null, null, false, null, false);
+        this(name, null, null, false, null, false, null);
     }
 
 
-    public ToDo(final String name, final Calendar completiondate, final Calendar completiontime, final boolean favorite, final String description, final boolean completionstatus) {
+    public ToDo(final String name, final Calendar completiondate, final Calendar completiontime, final boolean favorite, final String description, final boolean completionstatus, final LatLng location) {
         this.name = name;
         this.completiondate = completiondate;
         this.completiontime = completiontime;
         this.favorite = favorite;
         this.description = description;
         this.completionstatus = completionstatus;
+        this.location = location;
     }
 
     //Getter und Setter Methoden
@@ -94,6 +98,14 @@ public class ToDo implements Serializable {
 
     public void setCompletionstatus(final boolean completionstatus) {
         this.completionstatus = completionstatus;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 }
 

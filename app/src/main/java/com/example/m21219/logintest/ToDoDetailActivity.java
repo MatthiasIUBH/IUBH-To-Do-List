@@ -1,8 +1,15 @@
 package com.example.m21219.logintest;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +25,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -26,7 +41,7 @@ alle gespeicherten Werte zu ändern und zu speichern. Wir implentieren ebenfalls
 da wir Text eingeben und bearbeiten, "DatePickerDialog.OnDateSetListener" und "TimePickerDialog.OnTimeSetListener,
 damit werden die Dialogfenster mit Kalender und Uhr aufgerufen.*/
 public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher, DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener{
+        TimePickerDialog.OnTimeSetListener, OnMapReadyCallback, LocationListener{
 
 
     public static final String TODO_ID_KEY = "TODO";
@@ -39,6 +54,11 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
     private CheckBox completionstatus;
     private Button update_button;
 
+    public Button currentPosition1;
+    public GoogleMap map;
+    private Marker marker;
+    private LocationManager locationManager;
+
     private ToDo todo;
 
     @Override
@@ -49,6 +69,11 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         long id = getIntent().getLongExtra(TODO_ID_KEY, 0);
         this.todo = TodoDatabase.getInstance(this).readToDo(id);
 
+        this.currentPosition1 = (Button) findViewById(R.id.currentPosition1);
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         update_button = (Button) findViewById(R.id.update_button);
         name = (EditText) findViewById(R.id.name);
         completiondate = (TextView) findViewById(R.id.completiondate);
@@ -56,6 +81,17 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         description = (EditText) findViewById(R.id.description);
         favorite = (CheckBox) findViewById(R.id.favorite);
         completionstatus = (CheckBox) findViewById(R.id.completionstatus);
+
+        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (this.currentPosition1 != null) {
+            this.currentPosition1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    searchPosition();
+                }
+            });
+        }
 
         name.setText(todo.getName());
         completiondate.setText(todo.getCompletiondate() == null ? "-" : getDateInString(todo.getCompletiondate()));
@@ -145,6 +181,86 @@ public class ToDoDetailActivity extends AppCompatActivity implements TextWatcher
         });
 
     }
+
+    private void searchPosition() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.requestPermission(5);
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 50, this);
+    }
+
+    @Override
+    public void onMapReady(final GoogleMap googleMap) {
+        if (this.todo != null && this.todo.getLocation() != null) {
+            googleMap.addMarker(new MarkerOptions().position(todo.getLocation()));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(todo.getLocation(), 15));
+       }else {
+        this.map = googleMap;
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(final Location location) {
+        LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+        todo.setLocation(position);
+
+       if (this.map != null) {
+           if (this.marker != null) {
+               this.marker.remove();
+
+            }
+
+           this.marker = map.addMarker(new MarkerOptions().position(position));
+           this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
+        }
+
+        removeListener();
+    }
+
+    private void removeListener() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.requestPermission(4);
+        }
+        this.locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(final String s, final int i, final Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(final String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(final String s) {
+
+    }
+
+    private void requestPermission(final int resultCode) {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, resultCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        switch (requestCode) {
+            case 5:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    searchPosition();
+                }
+                break;
+            case 4:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    removeListener();
+                }
+                break;
+        }
+    }
+
 
     @Override
     public void onDateSet(final DatePicker datePicker, final int i, final int i1, final int i2) {

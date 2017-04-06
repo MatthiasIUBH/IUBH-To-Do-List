@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     public static TodoDatabase INSTANCE = null;
 
     private static final String DB_NAME = "TODOS";
-    private static final int VERSION = 4;
+    private static final int VERSION = 5;
     private static final String TABLE_NAME = "todos";
 
     public static final String ID_COLUMN = "ID";
@@ -35,6 +37,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     public static final String COMPLETIONSTATUS_COLUMN = "completionstatus";
     public static final String DESCRIPTION_COLUMN ="description";
     public static final String USERID_COLUMN ="UserID";
+    public static final String LATITUDE_COLUMN = "latitude";
+    public static final String LONGITUDE_COLUMN = "longitude";
 
 
     private TodoDatabase(final Context context) {
@@ -53,7 +57,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
         String createQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMARY KEY, "+ USERID_COLUMN + " INTEGER, " + NAME_COLUMN + " TEXT NOT NULL, " + COMPLETIONDATE_COLUMN + " INTEGER DEFAULT NULL, "
-                + COMPLETIONTIME_COLUMN + " INTEGER DEFAULT NULL, " + FAVORITE_COLUMN + " INTEGER DEFAULT 0, " + DESCRIPTION_COLUMN + " TEXT DEFAULT NULL, " + COMPLETIONSTATUS_COLUMN + " INTEGER DEFAULT 0)";
+                + COMPLETIONTIME_COLUMN + " INTEGER DEFAULT NULL, " + FAVORITE_COLUMN + " INTEGER DEFAULT 0, " + DESCRIPTION_COLUMN + " TEXT DEFAULT NULL, " + LATITUDE_COLUMN + " REAL DEFAULT NULL, " + LONGITUDE_COLUMN + " REAL DEFAULT NULL, " + COMPLETIONSTATUS_COLUMN + " INTEGER DEFAULT 0)";
 
         sqLiteDatabase.execSQL(createQuery);
     }
@@ -80,6 +84,9 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         values.put(DESCRIPTION_COLUMN, todo.getDescription());
         values.put(COMPLETIONSTATUS_COLUMN, todo.isCompletionstatus() ? 1 : 0);
 
+        values.put(LATITUDE_COLUMN, todo.getLocation() == null ? null : todo.getLocation().latitude);
+        values.put(LONGITUDE_COLUMN, todo.getLocation() == null ? null : todo.getLocation().longitude);
+
 
         long newID = database.insert(TABLE_NAME, null, values);
 
@@ -92,7 +99,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
     //Die Methode zum Auslesen von gespeicherten Todos
     public ToDo readToDo(final long id) {
         SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.query(TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, COMPLETIONDATE_COLUMN, COMPLETIONTIME_COLUMN, FAVORITE_COLUMN, DESCRIPTION_COLUMN, COMPLETIONSTATUS_COLUMN}, ID_COLUMN + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor cursor = database.query(TABLE_NAME, new String[]{ID_COLUMN, NAME_COLUMN, COMPLETIONDATE_COLUMN, COMPLETIONTIME_COLUMN, FAVORITE_COLUMN, DESCRIPTION_COLUMN, LATITUDE_COLUMN, LONGITUDE_COLUMN, COMPLETIONSTATUS_COLUMN}, ID_COLUMN + " = ?", new String[]{String.valueOf(id)}, null, null, null);
 
         ToDo todo = null;
 
@@ -123,6 +130,9 @@ public class TodoDatabase  extends SQLiteOpenHelper {
 
             todo.setCompletiontime(time);
 
+            if (!cursor.isNull(cursor.getColumnIndex(LATITUDE_COLUMN)) && !cursor.isNull(cursor.getColumnIndex(LONGITUDE_COLUMN))) {
+                todo.setLocation(new LatLng(cursor.getFloat(cursor.getColumnIndex(LATITUDE_COLUMN)), cursor.getFloat(cursor.getColumnIndex(LONGITUDE_COLUMN))));
+            }
 
         }
 
@@ -184,29 +194,6 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         return todos;
     }
 
-
-    /*public List<ToDo> heute(){
-        List<ToDo> todos = new ArrayList<>();
-        SQLiteDatabase database = this.getReadableDatabase();
-
-        String today = new SimpleDateFormat("dd.MM.yy", Locale.GERMANY).format(new Date());
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE completiondate LIKE " + "'" + '%' +  today + '%' + "'";
-        Cursor cursor = database.rawQuery(query, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                ToDo todo = readToDo(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)));
-                if (todo != null) {
-                    todos.add(todo);
-                }
-            } while (cursor.moveToNext());
-        }
-
-        database.close();
-
-        return todos;
-    }*/
-
     //Mit dieser Methode werden die Todos aktualisiert und erneut gespeichert.
     public ToDo updateToDo(final ToDo todo) {
         SQLiteDatabase database = this.getReadableDatabase();
@@ -218,6 +205,8 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         values.put(COMPLETIONTIME_COLUMN, todo.getCompletiontime() == null ? null :todo.getCompletiontime().getTimeInMillis());
         values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
         values.put(COMPLETIONSTATUS_COLUMN, todo.isCompletionstatus() ? 1 : 0);
+        values.put(LATITUDE_COLUMN, todo.getLocation() == null ? null : todo.getLocation().latitude);
+        values.put(LONGITUDE_COLUMN, todo.getLocation() == null ? null : todo.getLocation().longitude);
 
         database.update(TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{String.valueOf(todo.getId())});
 

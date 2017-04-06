@@ -14,7 +14,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:text="Name"
@@ -63,26 +64,26 @@
             android:id="@+id/view_completiondate" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
             android:id="@+id/completiondate"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="18sp"
-            android:hint="Fälligkeitsdatum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:ems="10"
-            android:layout_marginTop="10dp" />
+            android:hint="Fälligkeitsdatum"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="18sp" />
 
         <TextView
-            android:text="Fälligkeitsuhrzeit"
+            android:id="@+id/view_completiontime"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:id="@+id/view_completiontime" />
+            android:layout_height="20dp"
+            android:text="Fälligkeitsuhrzeit" />
 
         <TextView
             android:layout_width="match_parent"
             android:id="@+id/completiontime"
             android:textSize="18sp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:hint="Uhrzeit" />
 
         <RelativeLayout
@@ -101,7 +102,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/completionstatus"
-                android:layout_marginTop="14dp"
                 android:layout_below="@+id/view_completionstatus"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
@@ -124,6 +124,15 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
+            <Button
+                android:id="@+id/currentPosition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Position"
+                android:layout_below="@+id/favorite"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
         </RelativeLayout>
 
     </LinearLayout>
@@ -132,10 +141,21 @@
         android:text="Submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="61dp"
         android:id="@+id/submit"
-        android:onClick="onClickSubmit" />
+        android:onClick="onClickSubmit"
+        android:layout_alignBottom="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/submit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
