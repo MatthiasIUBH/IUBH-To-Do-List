@@ -205,6 +205,7 @@ public class TodoDatabase  extends SQLiteOpenHelper {
         values.put(COMPLETIONTIME_COLUMN, todo.getCompletiontime() == null ? null :todo.getCompletiontime().getTimeInMillis());
         values.put(FAVORITE_COLUMN, todo.isFavorite() ? 1 : 0);
         values.put(COMPLETIONSTATUS_COLUMN, todo.isCompletionstatus() ? 1 : 0);
+        values.put(DESCRIPTION_COLUMN, todo.getDescription() == null ? null : todo.getDescription());
         values.put(LATITUDE_COLUMN, todo.getLocation() == null ? null : todo.getLocation().latitude);
         values.put(LONGITUDE_COLUMN, todo.getLocation() == null ? null : todo.getLocation().longitude);
 
