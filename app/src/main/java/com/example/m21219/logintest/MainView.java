@@ -161,7 +161,7 @@ public class MainView extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void export() {
+    public void export() {
         try {
             String OutputString="";
             SimpleDateFormat simpleDate =  new SimpleDateFormat("dd.MM.yyyy");
@@ -171,11 +171,28 @@ public class MainView extends AppCompatActivity {
             OutputStreamWriter outputstream = new OutputStreamWriter(fOut);
 
             // Schreibe Daten in die Datei "Export.csv" unter \data\data\com.example.m21219.logintest\files
-            OutputString+="Name;Beschreibung;Erledigungsstatus;Favorit;Erledigungsdatum\n"; //Kopfzeile schreiben
+            OutputString+="Name;Beschreibung;Erledigungsstatus;Favorit;Koordinaten;Erledigungsdatum\n"; //Kopfzeile schreiben
 
-            //Daten schreiben
+            //Daten schreiben + Kontrolle auf Nullpointer
             for (ToDo s : dataexport) {
-                OutputString+= s.getName().toString() + ";"+s.getDescription().toString()+ ";"+s.isCompletionstatus()+";"+s.isFavorite()+";";
+
+                if (s.getName() != null)
+                    OutputString+= s.getName() + ";";
+                else
+                    OutputString+= ";";
+                if (s.getDescription() != null)
+                    OutputString+= s.getDescription() + ";";
+                else
+                    OutputString+= ";";
+
+                OutputString+= s.isCompletionstatus()+";"+s.isFavorite()+";";
+
+                if (s.getLocation() != null)
+                    OutputString+= s.getLocation().toString() + ";";
+                else
+                    OutputString+= ";";
+
+                //OutputString+= s.getName().toString() + ";"+s.getDescription().toString()+ ";"+s.isCompletionstatus()+";"+s.isFavorite()+";";
 
                 if ( s.getCompletiondate() == null) {
                     OutputString+="\n";
@@ -189,11 +206,13 @@ public class MainView extends AppCompatActivity {
             outputstream.write(OutputString);
             outputstream.flush();
             outputstream.close();
+            Toast.makeText(getApplicationContext(), "Daten wurden als CSV exportiert!", Toast.LENGTH_LONG).show();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+
     }
     private void heute() {
         dataSource.clear();
