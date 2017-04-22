@@ -3,6 +3,8 @@ package com.example.m21219.logintest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -156,6 +159,9 @@ public class MainView extends AppCompatActivity {
             case R.id.export:
                 this.export();
                 return true;
+            case R.id.teilen:
+                this.teilen();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -256,6 +262,22 @@ public class MainView extends AppCompatActivity {
         //macht ToDos direkt nach Erstellung sichtbar
         listView.invalidateViews();
         listView.refreshDrawableState();
+    }
+
+    public void teilen(){
+        String email = "";// E-Mail Adresse von Nutzer
+        String subject ="ToDo´s"; //Betreff
+        String body = "To-do-Information";//Inhalt
+        String chooserTitle = "ToDo´s teilen mit: ";//Überschrift beim Wählen von E-Mail Anbieter
+
+        Uri uri = Uri.parse("mailto:" + email)
+                .buildUpon()
+                .appendQueryParameter("subject", subject)
+                .appendQueryParameter("body", body)
+                .build();
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, uri);
+        startActivity(Intent.createChooser(emailIntent, chooserTitle));
     }
 
 

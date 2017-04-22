@@ -32,4 +32,8 @@
         android:id="@+id/export"
         android:orderInCategory="104"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/teilen"
+        android:orderInCategory="105"
+        android:title="Teilen" />
 </menu>
