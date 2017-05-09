@@ -30,6 +30,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import android.os.Environment;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
 
 /* Diese Activity wird aufgerufen, wenn der Benutzer richtige Userdaten eingegeben hat und zeigt eine ListView, bei der
 die gespeicherten Todos aufgelistet sind*/
@@ -270,6 +275,19 @@ public class MainView extends AppCompatActivity {
         String body = "To-do-Information";//Inhalt
         String chooserTitle = "ToDo´s teilen mit: ";//Überschrift beim Wählen von E-Mail Anbieter
 
+        export(); //sicherstellen das eine Export.csv existiert
+        String filename="Export.csv";
+
+        File from = new File(getApplicationInfo().dataDir,"/"+filename);
+        File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+filename); //datei auf ext. Storage kopieren da von intern nicht als Anhang verwendet werden kann
+
+        try{
+            copyFile(from, to);
+        }catch(IOException e){
+        }
+
+        Uri path = Uri.fromFile(to);
+
         Uri uri = Uri.parse("mailto:" + email)
                 .buildUpon()
                 .appendQueryParameter("subject", subject)
@@ -277,6 +295,7 @@ public class MainView extends AppCompatActivity {
                 .build();
 
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, uri);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, path); //attachment hinzufügen
         startActivity(Intent.createChooser(emailIntent, chooserTitle));
     }
 
@@ -285,6 +304,27 @@ public class MainView extends AppCompatActivity {
         Intent i = new Intent(MainView.this, TodoCreate.class); // Hier wird die "TodoCreate" Activitiy initialisiert und anschlißend gestartet.
         startActivity(i);
     }
+
+
+    private boolean copyFile(File src,File dst)throws IOException{
+        if(src.getAbsolutePath().toString().equals(dst.getAbsolutePath().toString())){
+
+            return true;
+
+        }else{
+            InputStream is=new FileInputStream(src);
+            OutputStream os=new FileOutputStream(dst);
+            byte[] buff=new byte[1024];
+            int len;
+            while((len=is.read(buff))>0){
+                os.write(buff,0,len);
+            }
+            is.close();
+            os.close();
+        }
+        return true;
+    }
+
 
 }
 
