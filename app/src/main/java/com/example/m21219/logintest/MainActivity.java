@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     if(cursor.getCount()<1) // UserName Not Exist
                     {
                         cursor.close();
-                        Toast toast = Toast.makeText(getApplicationContext(), "Unbekannter Username", 3);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Unbekannter Username", Toast.LENGTH_LONG);
                         toast.show();
                     }
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(), "User Name or Password does not match", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Nutzername oder Passwort ist nicht korrekt!", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     // exception handling
