@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.prefs.Preferences;
+
 /*Diese Klasse ist für die Loginfunktion zuständig, beinhaltet die User und Passwörter und vergleicht
 sie mit den eingegebenen Werten*/
 public class MainActivity extends AppCompatActivity {
@@ -84,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Nutzername oder Passwort ist nicht korrekt!", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
-                    // exception handling
+                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 } finally {
                     if(cursor != null){
                         cursor.close();
